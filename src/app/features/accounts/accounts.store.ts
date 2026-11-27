@@ -62,6 +62,26 @@ export class AccountsStore {
     this.searches.next({ debounce: false });
   }
 
+  /**
+   * O detalhe avisa o estado atual de uma conta (depois de um bloqueio, por
+   * exemplo). Se ela está na lista guardada, a lista passa a mostrar o mesmo,
+   * sem recarregar e sem perder a página em que a pessoa estava.
+   */
+  sync(account: Pick<BackofficeAccountSummary, 'accountId' | 'status' | 'balanceCents'>): void {
+    const items = this.items();
+    const index = items.findIndex((i) => i.accountId === account.accountId);
+    if (index < 0) {
+      return;
+    }
+    const current = items[index];
+    if (current.status === account.status && current.balanceCents === account.balanceCents) {
+      return;
+    }
+    const next = [...items];
+    next[index] = { ...current, status: account.status, balanceCents: account.balanceCents };
+    this.items.set(next);
+  }
+
   loadMore(): void {
     const cursor = this.nextCursor();
     if (!cursor || this.loading()) {
