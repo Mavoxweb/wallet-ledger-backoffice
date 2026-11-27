@@ -1,0 +1,55 @@
+// Tokens do visual aprovado (protótipo da fase 3). Fonte única: o tema do
+// Material e os estilos das telas leem daqui.
+
+// Cores base
+$ink: #0f1413;
+$mint: #7fd3bf;
+$background: #f4f5f1;
+$surface: #ffffff;
+$surface-subtle: #fafbf8;
+
+// Bordas
+$border: #e2e4de;
+$border-row: #eef0eb;
+$border-field: #cdd1ca;
+
+// Texto
+$text: $ink;
+$text-secondary: #5b625e;
+$text-tertiary: #3a423f;
+$nav-text: #c9d0cc;
+$nav-text-muted: #9da7a2;
+$nav-hover: #1e2725;
+$nav-divider: #26302d;
+
+// Status (fundo / texto)
+$active-bg: #dcf2eb;
+$active-text: #0b5e4c;
+$blocked-bg: #fbe7d3;
+$blocked-text: #7a3a00;
+$reversed-bg: #e8eae6;
+$reversed-text: $text-tertiary;
+$completed-bg: #eef0eb;
+$reversal-bg: #e2ecf8;
+$reversal-text: #1f4b7a;
+$warn-text: #6e3400;
+
+// Ação de bloqueio
+$warn: #9a4a00;
+$warn-hover: #7e3c00;
+
+// Tipografia
+$font-text: 'Inter', system-ui, sans-serif;
+$font-display: 'Space Grotesk', 'Inter', sans-serif;
+
+// Forma e densidade
+$radius-control: 8px;
+$radius-card: 12px;
+$radius-dialog: 14px;
+$row-height: 48px;
+$header-height: 40px;
+$nav-width: 232px;
+$content-max: 1200px;
+
+// Movimento: só o retorno ao pressionar. Nada de transição entre telas.
+$press-duration: 120ms;

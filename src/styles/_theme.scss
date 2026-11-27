@@ -1,0 +1,64 @@
+@use '@angular/material' as mat;
+@use 'tokens' as t;
+
+// Material 3 com a identidade do Wallet Ledger: a paleta base dá os estados
+// (hover, foco, desabilitado) e os overrides fixam as cores aprovadas.
+html {
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        theme-type: light,
+      ),
+      typography: (
+        plain-family: t.$font-text,
+        brand-family: t.$font-display,
+      ),
+      density: -1,
+    )
+  );
+
+  @include mat.theme-overrides(
+    (
+      primary: t.$ink,
+      on-primary: #ffffff,
+      primary-container: t.$active-bg,
+      on-primary-container: t.$active-text,
+      surface: t.$surface,
+      on-surface: t.$text,
+      on-surface-variant: t.$text-secondary,
+      outline: t.$border-field,
+      outline-variant: t.$border,
+      background: t.$background,
+      error: t.$warn,
+      corner-small: t.$radius-control,
+      corner-medium: t.$radius-card,
+      corner-extra-large: t.$radius-dialog,
+    )
+  );
+
+  @include mat.button-overrides(
+    (
+      filled-container-shape: t.$radius-control,
+      outlined-container-shape: t.$radius-control,
+      text-container-shape: t.$radius-control,
+      filled-label-text-weight: 600,
+      outlined-label-text-weight: 600,
+    )
+  );
+}
+
+// Foco visível em menta, igual em qualquer controle.
+:focus-visible {
+  outline: 3px solid t.$mint;
+  outline-offset: 2px;
+}
+
+.mat-mdc-button-base:active:not([disabled]) {
+  transform: scale(0.97);
+}
+
+.mat-mdc-button-base {
+  transition: transform t.$press-duration ease-out;
+}
