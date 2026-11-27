@@ -1,0 +1,69 @@
+@use '../../../styles/tokens' as t;
+@use '../../../styles/table';
+
+@include table.dense-table;
+
+.page {
+  max-width: t.$content-max;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: t.$text-secondary;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid t.$border-field;
+  background: t.$surface;
+  color: t.$text-tertiary;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    background: t.$ink;
+    color: #ffffff;
+    border-color: t.$ink;
+  }
+}
+
+.scope {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+  color: t.$text-tertiary;
+
+  a {
+    color: t.$text;
+    font-weight: 600;
+  }
+}

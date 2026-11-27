@@ -1,0 +1,42 @@
+@use '../../styles/tokens' as t;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.hint,
+.count {
+  font-weight: 400;
+  color: t.$text-secondary;
+}
+
+.count {
+  font-size: 12px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 10px 12px;
+  border-radius: t.$radius-control;
+  border: 1px solid t.$border-field;
+  background: t.$surface;
+  color: t.$text;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  resize: vertical;
+
+  &:focus {
+    outline: 3px solid t.$mint;
+    outline-offset: 0;
+    border-color: t.$ink;
+  }
+}

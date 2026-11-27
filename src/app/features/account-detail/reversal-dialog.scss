@@ -1,0 +1,29 @@
+@use '../../../styles/tokens' as t;
+
+.summary {
+  border: 1px solid t.$border;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: t.$surface-subtle;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: t.$text-secondary;
+}
+
+.amount {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.warning {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: t.$warn-text;
+}

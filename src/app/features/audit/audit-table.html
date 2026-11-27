@@ -1,0 +1,56 @@
+<div class="scroll">
+  <table>
+    <caption class="visually-hidden">
+      Ações da operação, da mais recente para a mais antiga
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Quando</th>
+        <th scope="col">Ação</th>
+        <th scope="col">Quem</th>
+        @if (showAccount()) {
+          <th scope="col">Conta</th>
+        }
+        <th scope="col">Motivo</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items(); track item.id) {
+        <tr>
+          <td class="num nowrap tertiary">{{ item.at | dateTime }}</td>
+          <td>
+            <wl-status-badge
+              [kind]="actions[item.action].kind"
+              [label]="actions[item.action].label"
+            />
+          </td>
+          <td class="nowrap">
+            <div class="stack">
+              <span class="strong">{{ item.actorName }}</span>
+              <span class="muted">{{ roles[item.actorRole] }}</span>
+            </div>
+          </td>
+          @if (showAccount()) {
+            <td class="nowrap">
+              <a
+                class="num account"
+                [routerLink]="['/contas', item.accountId]"
+                [queryParams]="{ aba: 'auditoria' }"
+                [attr.aria-label]="'Abrir a conta com final ' + item.accountNumber"
+                >•••• {{ item.accountNumber }}</a
+              >
+            </td>
+          }
+          <td class="reason">
+            <div class="stack">
+              <span>{{ item.reason }}</span>
+              @if (detail(item)) {
+                <span class="muted">{{ detail(item) }}</span>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

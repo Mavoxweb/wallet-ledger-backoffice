@@ -1,0 +1,28 @@
+@use '../../../styles/tokens' as t;
+@use '../../../styles/table';
+
+@include table.dense-table;
+
+:host {
+  display: block;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reason {
+  min-width: 280px;
+  line-height: 1.45;
+}
+
+.account {
+  color: t.$text;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

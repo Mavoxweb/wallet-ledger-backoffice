@@ -54,6 +54,42 @@
           <span class="balance-label">Saldo</span>
           <span class="num balance-value">{{ acc.balanceCents | money }}</span>
         </div>
+        @if (acc.status === 'active') {
+          <button type="button" class="action warn" (click)="openStatusDialog(acc, 'block')">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
+              <path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" />
+            </svg>
+            Bloquear conta
+          </button>
+        }
+        @if (acc.status === 'blocked') {
+          <button type="button" class="action ghost" (click)="openStatusDialog(acc, 'unblock')">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
+              <path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 6.6-1.6" />
+            </svg>
+            Desbloquear conta
+          </button>
+        }
       </div>
     </header>
 
@@ -87,10 +123,17 @@
       <div role="tabpanel" [attr.id]="'painel-' + tab()" [attr.aria-labelledby]="'aba-' + tab()">
         @switch (tab()) {
           @case ('extrato') {
-            <wl-statement-tab [accountId]="acc.accountId" />
+            <wl-statement-tab
+              [accountId]="acc.accountId"
+              [canReverse]="session.isAdmin()"
+              (reverse)="openReversal(acc, $event)"
+            />
           }
           @case ('chaves') {
             <wl-pix-keys-tab [keys]="acc.pixKeys" />
+          }
+          @case ('auditoria') {
+            <wl-audit-tab [accountId]="acc.accountId" />
           }
         }
       </div>

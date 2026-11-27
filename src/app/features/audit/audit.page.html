@@ -1,0 +1,55 @@
+<div class="page">
+  <header>
+    <h1 class="page-title">Auditoria</h1>
+    <p class="subtitle">
+      Toda ação da operação, com quem fez, quando e por quê. Nada aqui é editável.
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <div class="filters" role="group" aria-label="Filtrar por ação">
+      @for (filter of filters; track filter.label) {
+        <button
+          type="button"
+          class="chip"
+          [attr.aria-pressed]="action() === filter.value"
+          (click)="action.set(filter.value)"
+        >
+          {{ filter.label }}
+        </button>
+      }
+    </div>
+    @if (accountId()) {
+      <span class="scope">
+        Só uma conta
+        <a routerLink="/auditoria" aria-label="Mostrar todas as contas">Ver todas</a>
+      </span>
+    }
+  </div>
+
+  @if (feed.error()) {
+    <p class="error" role="alert">{{ feed.error() }}</p>
+  }
+
+  <section class="card" [attr.aria-busy]="feed.loading()">
+    <wl-audit-table [items]="feed.items()" />
+
+    @if (feed.loaded() && !feed.loading() && feed.items().length === 0) {
+      <div class="empty">
+        <p class="empty-title">Nenhuma ação registrada com esses filtros.</p>
+        <p class="muted">Bloqueios, desbloqueios e estornos aparecem aqui assim que acontecem.</p>
+      </div>
+    }
+
+    @if (feed.nextCursor() || feed.loading()) {
+      <div class="footer">
+        <span>{{ feed.loading() ? 'Carregando…' : '' }}</span>
+        @if (feed.nextCursor()) {
+          <button type="button" class="more" [disabled]="feed.loading()" (click)="feed.loadMore()">
+            Carregar mais
+          </button>
+        }
+      </div>
+    }
+  </section>
+</div>

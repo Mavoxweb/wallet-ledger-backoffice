@@ -1,0 +1,17 @@
+@use '../../../styles/tokens' as t;
+@use '../../../styles/table';
+
+@include table.dense-table;
+
+:host {
+  display: block;
+}
+
+.footer a {
+  color: t.$text;
+  font-weight: 600;
+}
+
+.error {
+  margin: 16px 20px 0;
+}
