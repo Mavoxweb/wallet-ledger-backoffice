@@ -79,6 +79,7 @@ test.describe.serial('backoffice da operação', () => {
     const entry = page.getByRole('row').filter({ hasText: reason });
     await expect(entry).toContainText('Bloqueio');
     await expect(entry).toContainText('Operador Demo');
+    await expect(entry).toContainText('Ana Beatriz Lima');
     await expect(entry).toContainText('Ativa → Bloqueada');
 
     // Deixa a Ana ativa de novo, também pela tela.

@@ -19,6 +19,7 @@ export interface AuditItem {
   action: AuditAction;
   accountId: string;
   accountNumber: string;
+  accountHolderName: string | null;
   transactionId: string | null;
   reason: string;
   details: any | null;

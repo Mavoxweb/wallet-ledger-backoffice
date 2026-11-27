@@ -14,8 +14,15 @@ import {
   BackofficeTransactionsService,
 } from '../../api';
 import { messageForError } from '../../core/errors/error-messages';
+import { problemCode } from '../../core/errors/problem';
 import { formatCents, formatDateTime } from '../../core/format/format';
 import { isValidReason, ReasonField } from '../../shared/reason-field';
+
+/**
+ * `true`: estornou. `'stale'`: a API disse que a transação já tinha sido
+ * estornada (por outra pessoa, talvez), e o extrato aberto está desatualizado.
+ */
+export type ReversalResult = true | 'stale' | false;
 
 export interface ReversalDialogData {
   account: BackofficeAccountDetail;
@@ -63,7 +70,7 @@ export function reversalFlow(holderName: string, item: BackofficeStatementItem):
       <p class="alert" role="alert">{{ error() }}</p>
     }
     <div class="actions">
-      <button type="button" class="btn ghost" [disabled]="busy()" (click)="ref.close(false)">
+      <button type="button" class="btn ghost" [disabled]="busy()" (click)="cancel()">
         Cancelar
       </button>
       <button
@@ -83,7 +90,7 @@ export class ReversalDialog {
   private readonly data = inject<ReversalDialogData>(MAT_DIALOG_DATA);
   private readonly api = inject(BackofficeTransactionsService);
   private readonly pendingTasks = inject(PendingTasks);
-  protected readonly ref = inject<MatDialogRef<ReversalDialog, boolean>>(MatDialogRef);
+  protected readonly ref = inject<MatDialogRef<ReversalDialog, ReversalResult>>(MatDialogRef);
 
   protected readonly isDeposit = this.data.item.type === 'deposit';
   protected readonly amount = formatCents(this.data.item.amountCents);
@@ -103,6 +110,11 @@ export class ReversalDialog {
   protected readonly canConfirm = computed(() => isValidReason(this.reason()) && !this.busy());
 
   private attempt: { reason: string; key: string } | null = null;
+  private stale = false;
+
+  protected cancel(): void {
+    this.ref.close(this.stale ? 'stale' : false);
+  }
 
   protected confirm(): void {
     if (!this.canConfirm()) {
@@ -131,6 +143,7 @@ export class ReversalDialog {
       );
       this.ref.close(true);
     } catch (error: unknown) {
+      this.stale ||= problemCode(error) === 'transaction_already_reversed';
       this.error.set(messageForError(error));
     } finally {
       this.busy.set(false);

@@ -33,12 +33,20 @@
           @if (showAccount()) {
             <td class="nowrap">
               <a
-                class="num account"
+                class="account"
                 [routerLink]="['/contas', item.accountId]"
                 [queryParams]="{ aba: 'auditoria' }"
-                [attr.aria-label]="'Abrir a conta com final ' + item.accountNumber"
-                >•••• {{ item.accountNumber }}</a
+                [attr.aria-label]="accountLabel(item)"
               >
+                <span class="stack">
+                  @if (item.accountHolderName) {
+                    <span class="strong">{{ item.accountHolderName }}</span>
+                  }
+                  <span class="num" [class.muted]="!!item.accountHolderName"
+                    >•••• {{ item.accountNumber }}</span
+                  >
+                </span>
+              </a>
             </td>
           }
           <td class="reason">

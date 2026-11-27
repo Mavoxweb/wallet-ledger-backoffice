@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Mavoxweb/wallet-ledger-backoffice/actions/workflows/ci.yml/badge.svg)](https://github.com/Mavoxweb/wallet-ledger-backoffice/actions/workflows/ci.yml)
 ![Angular 22](https://img.shields.io/badge/Angular-22-DD0031?logo=angular&logoColor=white)
-![Testes](https://img.shields.io/badge/testes-78%20%2B%203%20e2e-2ea44f)
+![Testes](https://img.shields.io/badge/testes-87%20%2B%203%20e2e-2ea44f)
 
 O painel da equipe de operação de uma carteira digital: achar a conta de um cliente, ver o extrato, bloquear uma conta suspeita, estornar um Pix enviado por engano e saber depois quem fez o quê, quando e por quê.
 
@@ -57,7 +57,7 @@ sequenceDiagram
 - **Detalhe da conta** com o CPF **mascarado** (`***.982.247-**`): a operação não precisa ver o número inteiro. Extrato paginado, chaves Pix e a trilha da conta em abas. A aba fica na URL, então o link pode ser mandado para um colega.
 - **Bloquear e desbloquear com motivo.** O diálogo diz a consequência ("…não vai conseguir enviar nem receber Pix, inclusive no app que já está aberto") e só libera o botão com um motivo de verdade, de 10 a 500 caracteres.
 - **Estorno só para o admin**, só nas transações que ainda podem ser estornadas. O diálogo mostra **quem devolve para quem** e avisa que não dá para desfazer.
-- **Auditoria** em todas as ações: quem fez, com qual perfil, quando, por quê e o que mudou ("Ativa → Bloqueada", "R$ 50,00 estornados"), com filtro por tipo de ação e por conta.
+- **Auditoria** em todas as ações: quem fez, com qual perfil, quando, por quê e o que mudou ("Ativa → Bloqueada", "R$ 50,00 estornados"), com filtro por tipo de ação e por conta. Na trilha geral, a conta aparece com o **nome do titular** e o final (`Ana Beatriz Lima`, `•••• 3822`). O link leva direto à conta.
 
 <p align="center">
   <img src="docs/media/estorno.gif" width="720" alt="Admin estorna um Pix: o extrato mostra o original estornado e o estorno, e a auditoria registra">
@@ -70,7 +70,7 @@ sequenceDiagram
 | **Estorno duplicado** | A `Idempotency-Key` nasce quando o admin confirma e é **reusada** na nova tentativa depois de um erro de rede. Se o primeiro pedido chegou, a API devolve a mesma resposta em vez de estornar de novo | [ADR 0005 da API](https://github.com/Mavoxweb/wallet-ledger-api/blob/main/docs/adr/0005-idempotencia-no-postgres.md) |
 | **Sessão em conexão ruim** | Um `401` renova o token **uma vez só**, mesmo com vários pedidos ao mesmo tempo (a API gira o refresh token). Erro de rede ou `5xx` na renovação mantém a sessão; só uma recusa da API leva ao login | [`auth.interceptor.ts`](src/app/core/auth/auth.interceptor.ts) |
 | **Quem pode o quê** | A regra está na API (`403` para perfil errado). A tela só esconde: guards por perfil e "Estornar" visível só para o admin | [ADR 0003](docs/adr/0003-autorizacao-no-servidor.md) |
-| **Contrato com a API** | Cliente TypeScript **gerado** do `openapi.json` da release `v0.2.0`. O CI regenera e falha se divergir | [ADR 0002](docs/adr/0002-cliente-gerado.md) |
+| **Contrato com a API** | Cliente TypeScript **gerado** do `openapi.json` do commit `e57a62f` no main da API. A release `v0.2.1` ainda não existe; o CI regenera e falha se divergir | [ADR 0002](docs/adr/0002-cliente-gerado.md) |
 | **Estado da tela** | Signals e componentes standalone; RxJS só onde o tempo importa (espera da busca, cancelamento, renovação do token) | [ADR 0001](docs/adr/0001-signals-e-standalone.md) |
 
 Do lado da API, a auditoria é gravada **na mesma transação** da ação, e dois estornos simultâneos da mesma transação viram um sucesso e um `409` ([ADR 0007 da API](https://github.com/Mavoxweb/wallet-ledger-api/blob/main/docs/adr/0007-auditoria-na-mesma-transacao.md)).
@@ -104,7 +104,7 @@ Em desenvolvimento, o `ng serve` repassa `/api` para `localhost:8080` (`proxy.co
 ## Testes
 
 ```bash
-npm test          # 78 testes unitários e de componente (Vitest)
+npm test          # 87 testes unitários e de componente (Vitest)
 npm run e2e       # 3 testes ponta a ponta (Playwright), com a API rodando em localhost:8080
 ```
 
@@ -112,7 +112,7 @@ Os principais:
 
 - **Ponta a ponta, contra a API de verdade:**
   - o operador bloqueia a Ana pela tela e, **com a sessão que o app dela já tinha**, o Pix é recusado com `account_not_active`;
-  - a auditoria registra o bloqueio;
+  - a auditoria registra o bloqueio e mostra o nome da titular;
   - o admin estorna um Pix, que fica "Estornada", enquanto o estorno aparece no extrato.
 - **Três `401` simultâneos fazem uma renovação só**, e uma queda de rede na renovação não desloga ninguém.
 - **A nova tentativa do estorno usa a mesma `Idempotency-Key`**, e mudar o motivo gera uma chave nova.
@@ -124,7 +124,6 @@ No CI, o job ponta a ponta baixa o repositório da API **na versão de `contract
 
 - **Ainda não há demo online.** O painel roda local, apontando para a API em Docker. Para publicar, falta um proxy (ou CORS na API) e um ambiente para a API.
 - **O dinheiro é fictício.** O Pix acontece entre contas deste sistema, sem integração com o Banco Central.
-- **A auditoria geral mostra a conta pelo final (`•••• 3822`), não pelo nome**, porque o contrato `v0.2.0` não traz o titular no item da trilha. O link leva direto à conta.
 - **Sem gestão de usuários da equipe.** Operador e admin vêm do seed de demonstração.
 
 ---

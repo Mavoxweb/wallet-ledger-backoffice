@@ -3,6 +3,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { provideApi } from '../../api';
 import { summary } from '../../../testing/api-fixtures';
+import { fakeJwt } from '../../../testing/fake-jwt';
+import { SessionStore } from '../../core/auth/session.store';
 import { AccountsStore } from './accounts.store';
 
 const URL = '/api/v1/backoffice/accounts';
@@ -13,11 +15,19 @@ describe('AccountsStore', () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
+    sessionStorage.setItem(
+      'wl.session',
+      JSON.stringify({
+        accessToken: fakeJwt({ role: 'Operator', name: 'Operador Demo', exp: 4102444800 }),
+        refreshToken: 'rt',
+      }),
+    );
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting(), provideApi('')],
     });
     http = TestBed.inject(HttpTestingController);
     store = TestBed.inject(AccountsStore);
+    TestBed.tick();
   });
 
   afterEach(() => {
@@ -123,5 +133,19 @@ describe('AccountsStore', () => {
     store.sync({ accountId: 'zzz', status: 'blocked', balanceCents: 1 });
 
     expect(store.items()).toBe(before);
+  });
+
+  it('ao sair da sessão, a lista e a busca são esquecidas', () => {
+    store.search('ana');
+    vi.advanceTimersByTime(300);
+    http.expectOne((r) => r.url === URL).flush({ items: [summary()], nextCursor: 'c1' });
+
+    TestBed.inject(SessionStore).clear();
+    TestBed.tick();
+
+    expect(store.items()).toEqual([]);
+    expect(store.query()).toBe('');
+    expect(store.nextCursor()).toBeNull();
+    expect(store.loaded()).toBe(false);
   });
 });

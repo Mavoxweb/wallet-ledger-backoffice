@@ -18,6 +18,7 @@ function entry(overrides: Partial<AuditItem> = {}): AuditItem {
     action: 'transactionReversed',
     accountId: 'acc-1',
     accountNumber: '3822',
+    accountHolderName: 'Ana Beatriz Lima',
     transactionId: 'tx-10',
     reason: 'Pix enviado por engano, confirmado com os dois.',
     details: { amountCents: 5000 },
@@ -60,9 +61,36 @@ describe('AuditPage', () => {
     expect(text).toContain('Estorno');
     expect(text).toContain('Admin Demo');
     expect(text).toContain('Admin');
+    expect(text).toContain('Ana Beatriz Lima');
     expect(text).toContain('•••• 3822');
     expect(text).toContain('Pix enviado por engano');
     expect(text).toContain('R$ 50,00');
+  });
+
+  it('a trilha geral mostra o nome do titular junto do final da conta', async () => {
+    const harness = await open();
+    http.expectOne((r) => r.url === URL).flush({ items: [entry()], nextCursor: null });
+    await harness.fixture.whenStable();
+
+    const account = harness.routeNativeElement!.querySelector('a.account')!;
+    expect(account.textContent).toContain('Ana Beatriz Lima');
+    expect(account.textContent).toContain('•••• 3822');
+    expect(account.getAttribute('aria-label')).toBe(
+      'Abrir a conta de Ana Beatriz Lima, final 3822',
+    );
+  });
+
+  it('sem nome do titular, a conta aparece só pelo final', async () => {
+    const harness = await open();
+    http
+      .expectOne((r) => r.url === URL)
+      .flush({ items: [entry({ accountHolderName: null })], nextCursor: null });
+    await harness.fixture.whenStable();
+
+    const account = harness.routeNativeElement!.querySelector('a.account')!;
+    expect(account.textContent).toContain('•••• 3822');
+    expect(account.textContent).not.toContain('Ana Beatriz Lima');
+    expect(account.getAttribute('aria-label')).toBe('Abrir a conta com final 3822');
   });
 
   it('bloqueio mostra a mudança de status', async () => {

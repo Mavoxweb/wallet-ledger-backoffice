@@ -18,3 +18,7 @@ export const adminGuard: CanActivateFn = () => {
   }
   return session.isAdmin() ? true : router.createUrlTree(['/contas']);
 };
+
+/** A tela de login é para quem ainda não entrou: com sessão, vai direto para as contas. */
+export const guestGuard: CanActivateFn = () =>
+  inject(SessionStore).role() ? inject(Router).createUrlTree(['/contas']) : true;

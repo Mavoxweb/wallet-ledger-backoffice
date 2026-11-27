@@ -29,7 +29,7 @@ import { StatusBadge } from '../../shared/status-badge';
 import { AuditTab } from './audit-tab';
 import { BlockDialog, BlockDialogData } from './block-dialog';
 import { PixKeysTab } from './pix-keys-tab';
-import { ReversalDialog, ReversalDialogData } from './reversal-dialog';
+import { ReversalDialog, ReversalDialogData, ReversalResult } from './reversal-dialog';
 import { StatementTab } from './statement-tab';
 
 export type DetailTab = 'extrato' | 'chaves' | 'auditoria';
@@ -154,16 +154,20 @@ export class AccountDetailPage {
 
   protected openReversal(account: BackofficeAccountDetail, item: BackofficeStatementItem): void {
     this.dialog
-      .open<ReversalDialog, ReversalDialogData, boolean>(ReversalDialog, {
+      .open<ReversalDialog, ReversalDialogData, ReversalResult>(ReversalDialog, {
         data: { account, item },
         width: '500px',
         maxWidth: 'calc(100vw - 32px)',
         ariaLabelledBy: 'dialog-title',
       })
       .afterClosed()
-      .subscribe((done) => {
-        if (done) {
+      .subscribe((result) => {
+        if (result === true) {
           this.afterAction('Estorno feito. O extrato e a auditoria já mostram a devolução.');
+        } else if (result === 'stale') {
+          // Outra pessoa estornou antes: o extrato passa a mostrar "Estornada".
+          this.reload();
+          this.statementTab()?.reload();
         }
       });
   }
