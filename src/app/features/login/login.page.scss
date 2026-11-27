@@ -1,0 +1,77 @@
+@use '../../../styles/tokens' as t;
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.column {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: t.$font-display;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.brand-sub {
+  font-size: 13px;
+  color: t.$text-secondary;
+}
+
+.card {
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-radius: t.$radius-card;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h1 {
+    margin: 0 0 16px;
+    font-family: t.$font-display;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  button {
+    margin-top: 8px;
+  }
+}
+
+.alert {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border-radius: t.$radius-control;
+  background: t.$blocked-bg;
+  color: t.$warn-text;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: t.$text-secondary;
+}

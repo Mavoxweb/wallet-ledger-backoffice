@@ -1,0 +1,124 @@
+@use '../../../styles/tokens' as t;
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.nav {
+  flex: 1 1 t.$nav-width;
+  background: t.$ink;
+  color: #ffffff;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px;
+}
+
+.brand-text,
+.user-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  font-family: t.$font-display;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.brand-sub,
+.user-role {
+  font-size: 12px;
+  color: t.$nav-text-muted;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.link {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: t.$radius-control;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: t.$nav-text;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    background: t.$nav-hover;
+    color: #ffffff;
+  }
+
+  &.active {
+    background: t.$nav-hover;
+    color: #ffffff;
+    box-shadow: inset 3px 0 0 t.$mint;
+  }
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.user {
+  border-top: 1px solid t.$nav-divider;
+  padding: 16px 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.logout {
+  align-self: flex-start;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: t.$radius-control;
+  border: 1px solid #3a4441;
+  background: transparent;
+  color: t.$nav-text;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform t.$press-duration ease-out;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.content {
+  flex: 999 1 560px;
+  min-width: 0;
+  padding: 28px 32px 48px;
+
+  @media (max-width: 600px) {
+    padding: 20px 16px 40px;
+  }
+}
