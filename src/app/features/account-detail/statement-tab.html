@@ -13,6 +13,9 @@
         <th scope="col">Movimento</th>
         <th scope="col">Status</th>
         <th scope="col" class="right">Valor</th>
+        @if (canReverse()) {
+          <th scope="col" class="right"><span class="visually-hidden">Ação</span></th>
+        }
       </tr>
     </thead>
     <tbody>
@@ -38,6 +41,23 @@
           >
             {{ item.direction === 'in' ? '+' : '−' }} {{ item.amountCents | money }}
           </td>
+          @if (canReverse()) {
+            <td class="right">
+              @if (item.reversible) {
+                <button
+                  type="button"
+                  class="more"
+                  data-reverse
+                  [attr.aria-label]="
+                    'Estornar ' + title(item) + ' de ' + (item.amountCents | money)
+                  "
+                  (click)="reverse.emit(item)"
+                >
+                  Estornar
+                </button>
+              }
+            </td>
+          }
         </tr>
       }
     </tbody>
@@ -59,4 +79,8 @@
       </button>
     }
   </div>
+}
+
+@if (!canReverse() && items().length > 0) {
+  <p class="note">Estornos são feitos pelo perfil Admin.</p>
 }

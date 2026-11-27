@@ -149,3 +149,42 @@
     color: t.$text;
   }
 }
+
+.action {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: t.$radius-control;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform t.$press-duration ease-out;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &.warn {
+    background: t.$warn;
+    color: #ffffff;
+
+    &:hover {
+      background: t.$warn-hover;
+    }
+  }
+
+  &.ghost {
+    background: t.$surface;
+    color: t.$text;
+    border-color: t.$border-field;
+
+    &:hover {
+      background: t.$border-row;
+    }
+  }
+}

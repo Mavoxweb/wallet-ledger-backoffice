@@ -4,6 +4,7 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
   untracked,
 } from '@angular/core';
@@ -42,6 +43,9 @@ export class StatementTab {
   private readonly api = inject(BackofficeAccountsService);
 
   readonly accountId = input.required<string>();
+  /** Só o admin estorna. A API também recusa o operador: o botão some por conforto. */
+  readonly canReverse = input(false);
+  readonly reverse = output<BackofficeStatementItem>();
 
   protected readonly items = signal<BackofficeStatementItem[]>([]);
   protected readonly nextCursor = signal<string | null>(null);

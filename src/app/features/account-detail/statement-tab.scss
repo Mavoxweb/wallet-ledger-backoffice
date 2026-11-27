@@ -29,3 +29,11 @@
 .error {
   margin: 16px 20px 0;
 }
+
+.note {
+  margin: 0;
+  padding: 12px 20px;
+  font-size: 13px;
+  color: t.$text-secondary;
+  border-top: 1px solid t.$border-row;
+}

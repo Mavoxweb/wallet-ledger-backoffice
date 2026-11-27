@@ -1,0 +1,83 @@
+@use 'tokens' as t;
+
+// Corpo dos diálogos de ação: pergunta, consequência, motivo, erro e botões.
+@mixin action-dialog {
+  :host {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    max-width: 500px;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: t.$font-display;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .body {
+    margin: 0;
+    line-height: 1.55;
+    color: t.$text-tertiary;
+  }
+
+  .alert {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: t.$radius-control;
+    background: t.$blocked-bg;
+    color: t.$warn-text;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .btn {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: t.$radius-control;
+    border: 1px solid transparent;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform t.$press-duration ease-out;
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  .ghost {
+    background: t.$surface;
+    color: t.$text;
+    border-color: t.$border-field;
+  }
+
+  .primary {
+    background: t.$ink;
+    color: #ffffff;
+  }
+
+  .warn {
+    background: t.$warn;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      background: t.$warn-hover;
+    }
+  }
+}

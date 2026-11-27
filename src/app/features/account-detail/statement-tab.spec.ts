@@ -21,9 +21,11 @@ describe('StatementTab', () => {
   async function render(
     items: ReturnType<typeof statementItem>[],
     nextCursor: string | null = null,
+    canReverse = false,
   ) {
     const fixture = TestBed.createComponent(StatementTab);
     fixture.componentRef.setInput('accountId', 'acc-1');
+    fixture.componentRef.setInput('canReverse', canReverse);
     fixture.detectChanges();
     http.expectOne((r) => r.url === URL).flush({ items, nextCursor });
     await fixture.whenStable();
@@ -97,5 +99,36 @@ describe('StatementTab', () => {
 
     expect(root.querySelectorAll('tbody tr')).toHaveLength(2);
     expect(root.querySelector('[data-load-more]')).toBeNull();
+  });
+
+  it('operador não vê "Estornar" e lê quem pode estornar', async () => {
+    const { root } = await render([statementItem()], null, false);
+
+    expect(root.querySelector('[data-reverse]')).toBeNull();
+    expect(root.textContent).toContain('Estornos são feitos pelo perfil Admin.');
+  });
+
+  it('admin vê "Estornar" só nos itens reversible', async () => {
+    const { root } = await render(
+      [
+        statementItem({ postingId: 3, transactionId: 'a', reversible: true }),
+        statementItem({ postingId: 2, transactionId: 'b', status: 'reversed', reversible: false }),
+        statementItem({ postingId: 1, transactionId: 'c', type: 'reversal', reversible: false }),
+      ],
+      null,
+      true,
+    );
+
+    expect(root.querySelectorAll('[data-reverse]')).toHaveLength(1);
+  });
+
+  it('clicar em "Estornar" avisa a página com o item', async () => {
+    const { fixture, root } = await render([statementItem()], null, true);
+    const picked: string[] = [];
+    fixture.componentInstance.reverse.subscribe((item) => picked.push(item.transactionId));
+
+    root.querySelector<HTMLButtonElement>('[data-reverse]')!.click();
+
+    expect(picked).toEqual(['tx-10']);
   });
 });
