@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-/** O símbolo do Wallet Ledger: três linhas de razão num quadrado arredondado. */
 @Component({
   selector: 'wl-brand-mark',
   changeDetection: ChangeDetectionStrategy.OnPush,

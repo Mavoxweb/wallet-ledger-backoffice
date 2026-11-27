@@ -107,7 +107,6 @@ export class SessionStore {
     void this.router.navigateByUrl('/login');
   }
 
-  /** Limpa a sessão local sem chamar a API. */
   clear(): void {
     this.tokens.set(null);
     this.storage.clear();

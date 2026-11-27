@@ -17,7 +17,6 @@ export class DateTimePipe implements PipeTransform {
   }
 }
 
-/** Só a data: "26/11/2026". */
 @Pipe({ name: 'day' })
 export class DayPipe implements PipeTransform {
   transform(iso: string): string {

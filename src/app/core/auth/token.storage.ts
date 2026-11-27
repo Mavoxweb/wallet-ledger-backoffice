@@ -8,9 +8,8 @@ export interface StoredTokens {
 const KEY = 'wl.session';
 
 /**
- * Tokens no `sessionStorage`: a sessão da operação acaba quando a aba fecha, e
- * não fica esquecida aberta num computador compartilhado. O refresh token expira
- * em 30 dias na API, mas aqui ele não sobrevive ao fechamento da aba.
+ * Tokens no `sessionStorage`: a sessão acaba quando a aba fecha e não fica
+ * esquecida aberta num computador compartilhado.
  */
 @Injectable({ providedIn: 'root' })
 export class TokenStorage {
