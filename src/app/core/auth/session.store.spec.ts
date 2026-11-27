@@ -1,11 +1,15 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideApi } from '../../api';
 import { fakeJwt } from '../../../testing/fake-jwt';
 import { SessionStore, StaffOnlyError } from './session.store';
 import { TokenStorage } from './token.storage';
+
+@Component({ template: '' })
+class Blank {}
 
 describe('SessionStore', () => {
   let http: HttpTestingController;
@@ -18,7 +22,7 @@ describe('SessionStore', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideRouter([]),
+        provideRouter([{ path: 'login', component: Blank }]),
         provideApi(''),
       ],
     });
