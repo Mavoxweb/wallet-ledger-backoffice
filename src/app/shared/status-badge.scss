@@ -1,0 +1,47 @@
+@use '../../styles/tokens' as t;
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+:host(.active),
+:host(.unblocked) {
+  background: t.$active-bg;
+  color: t.$active-text;
+}
+
+:host(.blocked) {
+  background: t.$blocked-bg;
+  color: t.$blocked-text;
+}
+
+:host(.closed),
+:host(.reversed) {
+  background: t.$reversed-bg;
+  color: t.$reversed-text;
+}
+
+:host(.completed) {
+  background: t.$completed-bg;
+  color: t.$text-tertiary;
+}
+
+:host(.reversal) {
+  background: t.$reversal-bg;
+  color: t.$reversal-text;
+}

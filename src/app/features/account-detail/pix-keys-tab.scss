@@ -1,0 +1,55 @@
+@use '../../../styles/tokens' as t;
+
+:host {
+  display: block;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 20px;
+  border-bottom: 1px solid t.$border-row;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.key {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.type {
+  font-size: 12px;
+  font-weight: 600;
+  color: t.$text-secondary;
+}
+
+.value {
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.date {
+  align-self: center;
+  font-size: 13px;
+  color: t.$text-secondary;
+}
+
+.empty {
+  margin: 0;
+  padding: 32px 20px;
+  text-align: center;
+  color: t.$text-secondary;
+}

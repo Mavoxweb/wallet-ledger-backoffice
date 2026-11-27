@@ -1,0 +1,135 @@
+@use 'tokens' as t;
+
+// Tabela densa das telas de lista: cabeçalho de 40 px, linhas de 48 px.
+@mixin dense-table {
+  .card {
+    background: t.$surface;
+    border: 1px solid t.$border;
+    border-radius: t.$radius-card;
+    overflow: hidden;
+  }
+
+  .scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  th {
+    font-size: 12px;
+    font-weight: 600;
+    color: t.$text-secondary;
+    text-align: left;
+    padding: 0 16px;
+    height: t.$header-height;
+    border-bottom: 1px solid t.$border;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 6px 16px;
+    height: t.$row-height;
+    border-bottom: 1px solid t.$border-row;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover td {
+    background: t.$surface-subtle;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .strong {
+    font-weight: 500;
+  }
+
+  .muted {
+    font-size: 12px;
+    color: t.$text-secondary;
+  }
+
+  .tertiary {
+    color: t.$text-tertiary;
+  }
+
+  .empty {
+    padding: 40px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    p {
+      margin: 0;
+    }
+
+    .muted {
+      font-size: 14px;
+    }
+  }
+
+  .empty-title {
+    font-weight: 600;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-top: 1px solid t.$border-row;
+    font-size: 13px;
+    color: t.$text-secondary;
+  }
+
+  .more {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: t.$radius-control;
+    border: 1px solid t.$border-field;
+    background: t.$surface;
+    color: t.$text;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform t.$press-duration ease-out;
+
+    &:hover:not(:disabled) {
+      background: t.$border-row;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  .error {
+    margin: 0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: t.$blocked-bg;
+    color: t.$warn-text;
+    font-size: 14px;
+  }
+}
