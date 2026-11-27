@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { catchError, EMPTY, Observable, of, Subject, switchMap, tap, timer } from 'rxjs';
 import {
   AccountStatus,
@@ -6,6 +6,7 @@ import {
   BackofficeAccountsService,
   BackofficeAccountSummary,
 } from '../../api';
+import { SessionStore } from '../../core/auth/session.store';
 import { isNetworkError, NETWORK_MESSAGE, UNEXPECTED_MESSAGE } from '../../core/errors/problem';
 
 const DEBOUNCE_MS = 300;
@@ -35,6 +36,18 @@ export class AccountsStore {
   private readonly searches = new Subject<{ debounce: boolean }>();
 
   constructor() {
+    // Saiu da sessão: a próxima pessoa nesta aba não vê a busca de quem saiu.
+    // Só na passagem de "logado" para "deslogado", não na primeira leitura.
+    const session = inject(SessionStore);
+    let signedIn = false;
+    effect(() => {
+      const now = session.role() !== null;
+      if (signedIn && !now) {
+        untracked(() => this.reset());
+      }
+      signedIn = now;
+    });
+
     this.searches
       .pipe(
         switchMap(({ debounce }) =>
@@ -45,6 +58,15 @@ export class AccountsStore {
         this.items.set(page.items);
         this.nextCursor.set(page.nextCursor);
       });
+  }
+
+  private reset(): void {
+    this.query.set('');
+    this.status.set(null);
+    this.items.set([]);
+    this.nextCursor.set(null);
+    this.loaded.set(false);
+    this.error.set('');
   }
 
   /** Texto digitado: busca 300 ms depois da última tecla. */

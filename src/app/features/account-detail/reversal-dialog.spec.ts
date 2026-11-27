@@ -127,4 +127,27 @@ describe('ReversalDialog', () => {
     expect(root.querySelector('[role=alert]')!.textContent).toContain('não tem saldo');
     expect(close).not.toHaveBeenCalled();
   });
+
+  it('se a transação já foi estornada, Cancelar avisa a página para recarregar o extrato', async () => {
+    const { fixture, root, close } = await open();
+
+    confirm(root).click();
+    http
+      .expectOne(URL)
+      .flush({ code: 'transaction_already_reversed' }, { status: 409, statusText: 'Conflict' });
+    await fixture.whenStable();
+    expect(root.querySelector('[role=alert]')!.textContent).toContain('já foi estornada');
+
+    root.querySelector<HTMLButtonElement>('.ghost')!.click();
+
+    expect(close).toHaveBeenCalledWith('stale');
+  });
+
+  it('sem nada acontecer, Cancelar fecha com false', async () => {
+    const { root, close } = await open();
+
+    root.querySelector<HTMLButtonElement>('.ghost')!.click();
+
+    expect(close).toHaveBeenCalledWith(false);
+  });
 });

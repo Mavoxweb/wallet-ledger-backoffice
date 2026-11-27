@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-import { staffGuard } from './core/auth/role.guard';
+import { guestGuard, staffGuard } from './core/auth/role.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [guestGuard],
     title: 'Entrar · Wallet Ledger',
     loadComponent: () => import('./features/login/login.page').then((m) => m.LoginPage),
   },

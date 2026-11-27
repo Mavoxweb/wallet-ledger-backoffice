@@ -6,7 +6,7 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideApi } from '../../api';
 import { fakeJwt } from '../../../testing/fake-jwt';
-import { adminGuard, staffGuard } from './role.guard';
+import { adminGuard, guestGuard, staffGuard } from './role.guard';
 import { TokenStorage } from './token.storage';
 
 @Component({ template: '' })
@@ -21,7 +21,7 @@ describe('guards', () => {
         provideHttpClientTesting(),
         provideApi(''),
         provideRouter([
-          { path: 'login', component: Blank },
+          { path: 'login', component: Blank, canActivate: [guestGuard] },
           { path: 'contas', component: Blank, canActivate: [staffGuard] },
           { path: 'admin', component: Blank, canActivate: [adminGuard] },
         ]),
@@ -56,5 +56,13 @@ describe('guards', () => {
 
   it('token de cliente não passa pela rota de staff', async () => {
     expect(await navigateAs('Customer', '/contas')).toBe('/login');
+  });
+
+  it('quem já está logado e abre /login vai para /contas', async () => {
+    expect(await navigateAs('Operator', '/login')).toBe('/contas');
+  });
+
+  it('sem sessão, /login abre normalmente', async () => {
+    expect(await navigateAs(null, '/login')).toBe('/login');
   });
 });
