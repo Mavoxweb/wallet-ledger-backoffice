@@ -19,6 +19,13 @@ const STATUS: Record<string, string> = {
   closed: 'Encerrada',
 };
 
+/** Nome acessível do link da conta: titular quando o contrato traz, senão só o final. */
+export function accountLabel(item: AuditItem): string {
+  return item.accountHolderName
+    ? `Abrir a conta de ${item.accountHolderName}, final ${item.accountNumber}`
+    : `Abrir a conta com final ${item.accountNumber}`;
+}
+
 /** O que mudou, em uma linha: "Ativa → Bloqueada" ou "R$ 50,00 estornados". */
 export function auditDetail(item: AuditItem): string {
   const details = (item.details ?? {}) as Record<string, unknown>;
@@ -45,4 +52,5 @@ export class AuditTable {
   protected readonly actions = ACTIONS;
   protected readonly roles = ROLES;
   protected readonly detail = auditDetail;
+  protected readonly accountLabel = accountLabel;
 }
