@@ -93,4 +93,35 @@ describe('AccountsStore', () => {
     expect(store.items()).toHaveLength(1);
     expect(store.error()).toContain('Não foi possível falar com o servidor.');
   });
+
+  it('sync atualiza status e saldo de uma conta já listada (volta do detalhe)', () => {
+    store.load();
+    http
+      .expectOne((r) => r.url === URL)
+      .flush({
+        items: [summary({ accountId: 'a' }), summary({ accountId: 'b' })],
+        nextCursor: null,
+      });
+
+    store.sync({ accountId: 'a', status: 'blocked', balanceCents: 100 });
+
+    expect(store.items()[0]).toMatchObject({
+      accountId: 'a',
+      status: 'blocked',
+      balanceCents: 100,
+    });
+    expect(store.items()[1].status).toBe('active');
+  });
+
+  it('sync de conta fora da lista não muda nada', () => {
+    store.load();
+    http
+      .expectOne((r) => r.url === URL)
+      .flush({ items: [summary({ accountId: 'a' })], nextCursor: null });
+    const before = store.items();
+
+    store.sync({ accountId: 'zzz', status: 'blocked', balanceCents: 1 });
+
+    expect(store.items()).toBe(before);
+  });
 });

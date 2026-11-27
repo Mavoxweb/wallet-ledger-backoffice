@@ -61,6 +61,12 @@ test.describe.serial('backoffice da operação', () => {
 
     await expect(page.getByText('Conta bloqueada: não envia nem recebe Pix.')).toBeVisible();
 
+    // A lista guardada mostra o mesmo status, sem precisar buscar de novo.
+    await page.getByRole('link', { name: 'Contas', exact: true }).first().click();
+    await expect(page.getByRole('row').filter({ hasText: 'Ana Beatriz Lima' })).toContainText(
+      'Bloqueada',
+    );
+
     // O app da Ana, com o token que já tinha, não consegue mais fazer Pix.
     const pix = await api.post(`${API}/transfers/pix`, {
       headers: { Authorization: `Bearer ${anaToken}`, 'Idempotency-Key': randomUUID() },

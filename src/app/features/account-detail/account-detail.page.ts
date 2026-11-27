@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -10,6 +17,7 @@ import {
   BackofficeStatementItem,
 } from '../../api';
 import { SessionStore } from '../../core/auth/session.store';
+import { AccountsStore } from '../accounts/accounts.store';
 import {
   isNetworkError,
   NETWORK_MESSAGE,
@@ -85,6 +93,18 @@ export class AccountDetailPage {
     const state = this.state();
     return state.kind === 'ready' ? state.account : null;
   });
+
+  private readonly accounts = inject(AccountsStore);
+
+  constructor() {
+    // Mantém a lista de contas coerente com o que este detalhe acabou de ler.
+    effect(() => {
+      const account = this.account();
+      if (account) {
+        this.accounts.sync(account);
+      }
+    });
+  }
 
   protected selectTab(tab: DetailTab): void {
     void this.router.navigate([], {
