@@ -11,7 +11,6 @@ import { BackofficeAuditService } from '../../api';
 import { AuditFeed } from '../audit/audit-feed';
 import { AuditTable } from '../audit/audit-table';
 
-/** As ações da operação nesta conta. */
 @Component({
   selector: 'wl-audit-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,

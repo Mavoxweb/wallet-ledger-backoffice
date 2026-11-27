@@ -1,11 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { NETWORK_MESSAGE, problemCode, UNEXPECTED_MESSAGE } from './problem';
 
-/**
- * Código estável da API → mensagem para a operação. Mesmo tom do app: diz o que
- * aconteceu e o que fazer, sem jargão. A tela decide pelo `code`, nunca pelo
- * texto do servidor.
- */
+/** A tela decide pelo `code` estável da API, nunca pelo texto do servidor. */
 const BY_CODE: Record<string, string> = {
   account_already_blocked:
     'Esta conta já está bloqueada. Atualize a página para ver o status atual.',
@@ -36,7 +32,6 @@ export function errorMessageFor(code: string | undefined | null, status: number)
   return UNEXPECTED_MESSAGE;
 }
 
-/** Atalho para um erro qualquer vindo de uma chamada HTTP. */
 export function messageForError(error: unknown): string {
   const status = error instanceof HttpErrorResponse ? error.status : -1;
   return errorMessageFor(problemCode(error), status);

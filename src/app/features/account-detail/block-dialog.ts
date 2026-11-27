@@ -18,10 +18,7 @@ export interface BlockDialogData {
   mode: 'block' | 'unblock';
 }
 
-/**
- * Bloquear ou desbloquear. O título pergunta com o nome, o corpo diz a
- * consequência e o botão nomeia a ação. Fecha com `true` quando a API confirmou.
- */
+/** Bloquear ou desbloquear. Fecha com `true` quando a API confirmou. */
 @Component({
   selector: 'wl-block-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
