@@ -1,0 +1,104 @@
+<div class="page">
+  <header>
+    <h1 class="page-title">Contas</h1>
+    <p class="subtitle" aria-live="polite">{{ summary() }}</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="search">
+      <label for="busca" class="visually-hidden">Buscar contas</label>
+      <svg
+        class="search-icon"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="6.5" />
+        <path d="m20 20-4.2-4.2" />
+      </svg>
+      <input
+        id="busca"
+        type="search"
+        autocomplete="off"
+        placeholder="CPF, e-mail, final da conta ou nome"
+        [value]="store.query()"
+        (input)="onInput($event)"
+      />
+    </div>
+
+    <div class="filters" role="group" aria-label="Filtrar por status">
+      @for (filter of filters; track filter.label) {
+        <button
+          type="button"
+          class="chip"
+          [attr.aria-pressed]="store.status() === filter.value"
+          (click)="store.setStatus(filter.value)"
+        >
+          {{ filter.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (store.error()) {
+    <p class="error" role="alert">{{ store.error() }}</p>
+  }
+
+  <section class="card" [attr.aria-busy]="store.loading()">
+    <div class="scroll">
+      <table>
+        <caption class="visually-hidden">
+          Contas de clientes, das mais novas para as mais antigas
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Titular</th>
+            <th scope="col">Conta</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="right">Saldo</th>
+            <th scope="col">Abertura</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (account of store.items(); track account.accountId) {
+            <tr>
+              <td>
+                <div class="holder">
+                  <a [routerLink]="['/contas', account.accountId]">{{ account.holderName }}</a>
+                  <span class="muted">{{ account.holderEmail }}</span>
+                </div>
+              </td>
+              <td class="num nowrap">•••• {{ account.number }}</td>
+              <td><wl-status-badge [kind]="account.status" [dot]="true" /></td>
+              <td class="num right nowrap strong">{{ account.balanceCents | money }}</td>
+              <td class="nowrap tertiary">{{ account.openedAt | day }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (store.loaded() && !store.loading() && store.items().length === 0) {
+      <div class="empty">
+        <p class="empty-title">Nenhuma conta encontrada para essa busca.</p>
+        <p class="muted">
+          Confira o CPF ou o e-mail, ou busque pelos 4 últimos caracteres da conta.
+        </p>
+      </div>
+    }
+
+    <div class="footer">
+      <span>{{ store.loading() ? 'Carregando…' : 'Mais novas primeiro' }}</span>
+      @if (store.nextCursor()) {
+        <button type="button" class="more" [disabled]="store.loading()" (click)="store.loadMore()">
+          Carregar mais
+        </button>
+      }
+    </div>
+  </section>
+</div>

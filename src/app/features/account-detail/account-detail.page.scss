@@ -1,0 +1,151 @@
+@use '../../../styles/tokens' as t;
+
+.page {
+  max-width: t.$content-max;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-radius: t.$radius-card;
+}
+
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: t.$text-tertiary;
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.status {
+  margin: 0;
+  color: t.$text-secondary;
+}
+
+.notice {
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+
+  a {
+    color: t.$text;
+  }
+}
+
+.notice-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.head {
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  color: t.$text-tertiary;
+}
+
+.side {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.balance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.balance-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: t.$text-secondary;
+}
+
+.balance-value {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.blocked-note {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: t.$blocked-bg;
+  color: t.$warn-text;
+  line-height: 1.45;
+}
+
+.tabs-card {
+  overflow: hidden;
+}
+
+.tablist {
+  display: flex;
+  gap: 24px;
+  padding: 0 20px;
+  border-bottom: 1px solid t.$border;
+  overflow-x: auto;
+}
+
+.tab {
+  height: 44px;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: t.$text-secondary;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &[aria-selected='true'] {
+    color: t.$text;
+    border-bottom-color: t.$ink;
+    font-weight: 600;
+  }
+
+  &:hover {
+    color: t.$text;
+  }
+}

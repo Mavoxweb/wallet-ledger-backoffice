@@ -23,7 +23,7 @@ export const routes: Routes = [
         path: 'contas/:id',
         title: 'Conta · Wallet Ledger',
         loadComponent: () =>
-          import('./features/accounts/account-detail.page').then((m) => m.AccountDetailPage),
+          import('./features/account-detail/account-detail.page').then((m) => m.AccountDetailPage),
       },
       {
         path: 'auditoria',

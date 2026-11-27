@@ -1,0 +1,99 @@
+<div class="page">
+  <a class="back" routerLink="/contas">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      aria-hidden="true"
+    >
+      <path d="M15 5l-7 7 7 7" />
+    </svg>
+    Contas
+  </a>
+
+  @switch (state().kind) {
+    @case ('loading') {
+      <p class="status" aria-live="polite">Carregando a conta…</p>
+    }
+    @case ('error') {
+      @if (state(); as s) {
+        @if (s.kind === 'error') {
+          <div class="card notice" role="alert">
+            <p class="notice-title">{{ s.message }}</p>
+            <a routerLink="/contas">Voltar para a lista de contas</a>
+          </div>
+        }
+      }
+    }
+  }
+
+  @if (account(); as acc) {
+    <header class="card head">
+      <div class="identity">
+        <div class="name-row">
+          <h1 class="page-title">{{ acc.holderName }}</h1>
+          <wl-status-badge [kind]="acc.status" [dot]="true" />
+        </div>
+        <p class="meta">
+          <span
+            >Conta <span class="num">•••• {{ acc.number }}</span></span
+          >
+          <span
+            >CPF <span class="num">{{ acc.holderCpfMasked }}</span></span
+          >
+          <span>{{ acc.holderEmail }}</span>
+          <span>Aberta em {{ acc.openedAt | day }}</span>
+        </p>
+      </div>
+      <div class="side">
+        <div class="balance">
+          <span class="balance-label">Saldo</span>
+          <span class="num balance-value">{{ acc.balanceCents | money }}</span>
+        </div>
+      </div>
+    </header>
+
+    @if (acc.status === 'blocked') {
+      <p class="blocked-note">
+        Conta bloqueada: não envia nem recebe Pix. O saldo continua guardado, e um estorno ainda
+        pode ser feito.
+      </p>
+    }
+
+    <section class="card tabs-card">
+      <div class="tablist" role="tablist" aria-label="Detalhes da conta">
+        @for (t of tabs; track t.id; let i = $index) {
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            [attr.data-tab]="t.id"
+            [attr.id]="'aba-' + t.id"
+            [attr.aria-selected]="tab() === t.id"
+            [attr.aria-controls]="'painel-' + t.id"
+            [attr.tabindex]="tab() === t.id ? 0 : -1"
+            (click)="selectTab(t.id)"
+            (keydown)="onTabKey($event, i)"
+          >
+            {{ t.label }}
+          </button>
+        }
+      </div>
+
+      <div role="tabpanel" [attr.id]="'painel-' + tab()" [attr.aria-labelledby]="'aba-' + tab()">
+        @switch (tab()) {
+          @case ('extrato') {
+            <wl-statement-tab [accountId]="acc.accountId" />
+          }
+          @case ('chaves') {
+            <wl-pix-keys-tab [keys]="acc.pixKeys" />
+          }
+        }
+      </div>
+    </section>
+  }
+</div>

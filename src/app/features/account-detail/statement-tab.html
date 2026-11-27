@@ -1,0 +1,62 @@
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+<div class="scroll" [attr.aria-busy]="loading()">
+  <table>
+    <caption class="visually-hidden">
+      Extrato da conta, do mais novo para o mais antigo
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Data</th>
+        <th scope="col">Movimento</th>
+        <th scope="col">Status</th>
+        <th scope="col" class="right">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items(); track item.postingId) {
+        <tr>
+          <td class="num nowrap tertiary">{{ item.createdAt | dateTime }}</td>
+          <td>
+            <div class="movement">
+              <span data-title class="strong">{{ title(item) }}</span>
+              @if (item.description) {
+                <span class="muted">{{ item.description }}</span>
+              }
+            </div>
+          </td>
+          <td>
+            <wl-status-badge [kind]="item.status === 'reversed' ? 'reversed' : 'completed'" />
+          </td>
+          <td
+            data-amount
+            class="num right nowrap strong amount"
+            [class.in]="item.direction === 'in'"
+            [class.struck]="item.status === 'reversed'"
+          >
+            {{ item.direction === 'in' ? '+' : '−' }} {{ item.amountCents | money }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (loaded() && items().length === 0) {
+  <div class="empty">
+    <p class="empty-title">Nenhum movimento nesta conta.</p>
+  </div>
+}
+
+@if (nextCursor() || loading()) {
+  <div class="footer">
+    <span>{{ loading() ? 'Carregando…' : '' }}</span>
+    @if (nextCursor()) {
+      <button type="button" class="more" data-load-more [disabled]="loading()" (click)="loadMore()">
+        Carregar mais
+      </button>
+    }
+  </div>
+}

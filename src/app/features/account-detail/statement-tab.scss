@@ -1,0 +1,31 @@
+@use '../../../styles/tokens' as t;
+@use '../../../styles/table';
+
+@include table.dense-table;
+
+:host {
+  display: block;
+}
+
+.movement {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.amount {
+  color: t.$text;
+
+  &.in {
+    color: t.$active-text;
+  }
+
+  &.struck {
+    color: t.$text-secondary;
+    text-decoration: line-through;
+  }
+}
+
+.error {
+  margin: 16px 20px 0;
+}
